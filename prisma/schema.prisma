@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum GenerationStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+model TravelRequest {
+  id                    String               @id @default(cuid())
+  departure             String
+  travelers             Int
+  budget                Decimal              @db.Decimal(12, 2)
+  currency              String               @db.VarChar(3)
+  accommodation         String
+  tripLengthDays        Int
+  earliestDeparture     DateTime             @db.Date
+  latestReturn          DateTime             @db.Date
+  flexibility           String
+  interests             String[]
+  pace                  String
+  generationStatus      GenerationStatus     @default(PENDING)
+  generationVersion     String
+  sanitizedError        String?
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  recommendations       TripRecommendation[]
+  feedback              TravelFeedback[]
+
+  @@index([generationStatus])
+  @@index([createdAt])
+}
+
+model TripRecommendation {
+  id                    String          @id @default(cuid())
+  requestId             String
+  request               TravelRequest   @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  rank                  Int
+  title                 String
+  destination           String
+  summary               String
+  whyItFits             String[]
+  practicalNotes        String[]
+  startDate             DateTime        @db.Date
+  endDate               DateTime        @db.Date
+  currency              String          @db.VarChar(3)
+  accommodationEstimate Decimal         @db.Decimal(12, 2)
+  transitEstimate       Decimal         @db.Decimal(12, 2)
+  experienceEstimate    Decimal         @db.Decimal(12, 2)
+  bufferEstimate        Decimal         @db.Decimal(12, 2)
+  totalEstimatedCost    Decimal         @db.Decimal(12, 2)
+  createdAt             DateTime        @default(now())
+  itineraryDays         ItineraryDay[]
+  priceAlerts           PriceAlert[]
+  feedback              TravelFeedback[]
+
+  @@unique([requestId, rank])
+  @@index([requestId])
+}
+
+model ItineraryDay {
+  id               String             @id @default(cuid())
+  recommendationId String
+  recommendation   TripRecommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+  day              Int
+  date             DateTime           @db.Date
+  title            String
+  summary          String
+  estimatedCost    Decimal            @db.Decimal(12, 2)
+  notes            String[]
+
+  @@unique([recommendationId, day])
+}
+
+model PriceAlert {
+  id               String             @id @default(cuid())
+  recommendationId String
+  recommendation   TripRecommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+  email            String
+  normalizedEmail  String
+  createdAt        DateTime           @default(now())
+
+  @@unique([recommendationId, normalizedEmail])
+  @@index([normalizedEmail])
+}
+
+model TravelFeedback {
+  id               String              @id @default(cuid())
+  requestId        String?
+  request          TravelRequest?       @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  recommendationId String?
+  recommendation   TripRecommendation?  @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+  rating           Int
+  comment          String?
+  createdAt        DateTime            @default(now())
+
+  @@index([requestId])
+  @@index([recommendationId])
+}
+
+model RateLimitAttempt {
+  id             String   @id @default(cuid())
+  key            String
+  scope          String
+  requestId      String?
+  createdAt      DateTime @default(now())
+
+  @@index([key, scope, createdAt])
+  @@index([requestId, scope, createdAt])
+}
+
+model AnalyticsEvent {
+  id          String   @id @default(cuid())
+  name        String
+  anonymousId String?
+  properties  Json
+  createdAt   DateTime @default(now())
+
+  @@index([name, createdAt])
+  @@index([anonymousId])
+}

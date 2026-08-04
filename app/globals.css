@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+:root { --bg: #faf4ea; --ink: #2f261f; --muted: #75685c; --card: #fffaf2; --accent: #d97706; }
+body { margin: 0; background: radial-gradient(circle at top left, #ffe8bf, transparent 35%), var(--bg); color: var(--ink); font-family: var(--font-geist-sans), ui-sans-serif, system-ui; }
+a { color: inherit; text-decoration: none; }
+.input { width: 100%; border: 1px solid #e7d8c6; border-radius: 1rem; background: white; padding: .8rem 1rem; margin-top: .35rem; color: #2f261f; }
+.btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #b45309; color: white; font-weight: 700; padding: .85rem 1.2rem; box-shadow: 0 12px 30px rgba(180,83,9,.2); }
+.btn.secondary { background: white; color: #5f4c3a; border: 1px solid #eadcc9; box-shadow: none; }
+.card { border: 1px solid rgba(120, 83, 45, .14); background: rgba(255,250,242,.88); border-radius: 2rem; box-shadow: 0 20px 60px rgba(78,54,28,.09); }
+.gradient-destination { background: linear-gradient(135deg, #f59e0b, #f97316 45%, #0f766e); }

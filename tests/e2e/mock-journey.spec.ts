@@ -1,0 +1,32 @@
+import { expect, test } from '@playwright/test';
+
+test('mock AI full planning journey works on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: /TripPossible/i })).toBeVisible();
+  await page.getByRole('link', { name: /start planning/i }).click();
+  await page.getByLabel(/departure city/i).fill('Mexico City');
+  await page.getByLabel(/travelers/i).fill('2');
+  await page.getByRole('button', { name: /next/i }).click();
+  await page.getByLabel(/trip budget/i).fill('3000');
+  await page.getByLabel(/currency/i).selectOption('USD');
+  await page.getByLabel(/accommodation/i).fill('boutique hotel');
+  await page.getByRole('button', { name: /next/i }).click();
+  await page.getByLabel(/trip length/i).fill('4');
+  await page.getByLabel(/earliest departure/i).fill('2026-10-01');
+  await page.getByLabel(/latest return/i).fill('2026-10-20');
+  await page.getByRole('button', { name: /next/i }).click();
+  await page.getByLabel(/food/i).check();
+  await page.getByLabel(/culture/i).check();
+  await page.getByRole('button', { name: /show my three trips/i }).click();
+  await expect(page).toHaveURL(/\/plan\/results\//);
+  await expect(page.getByRole('article')).toHaveCount(3);
+  await page.getByRole('link', { name: /view trip/i }).first().click();
+  await expect(page.getByRole('heading', { name: /day-by-day/i })).toBeVisible();
+  await page.getByLabel(/email/i).fill('Frank@Example.com');
+  await page.getByRole('button', { name: /watch this trip/i }).click();
+  await expect(page.getByText(/we'll let you know/i)).toBeVisible();
+  await page.getByRole('button', { name: /5/i }).click();
+  await page.getByRole('button', { name: /send feedback/i }).click();
+  await expect(page.getByText(/thanks/i)).toBeVisible();
+});

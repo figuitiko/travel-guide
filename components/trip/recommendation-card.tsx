@@ -1,0 +1,4 @@
+import Link from 'next/link';
+import type { serializeRecommendation } from '@/lib/travel/serialization';
+type Rec = ReturnType<typeof serializeRecommendation>;
+export function RecommendationCard({ rec }: { rec: Rec }) { return <article className="card overflow-hidden" aria-label={rec.title}><div className="gradient-destination h-28" /><div className="space-y-4 p-5"><div><p className="text-sm font-bold uppercase tracking-widest text-amber-700">Option {rec.rank}</p><h2 className="text-2xl font-black">{rec.destination}</h2><p className="text-stone-600">{rec.summary}</p></div><p className="text-xl font-black">{rec.currency} {rec.totalEstimatedCost.toLocaleString()}</p><ul className="list-disc pl-5 text-sm text-stone-600">{rec.whyItFits.map((w) => <li key={w}>{w}</li>)}</ul><Link className="btn w-full" href={`/trips/${rec.id}`}>View trip</Link></div></article>; }

@@ -1,0 +1,1 @@
+export default function NotFound() { return <div className="mx-auto max-w-3xl px-5 py-12"><h1 className="text-3xl font-black">Trip not found</h1><p className="mt-3 text-stone-600">That link may be outdated or private.</p><a className="btn mt-6" href="/plan">Plan a new trip</a></div>; }
