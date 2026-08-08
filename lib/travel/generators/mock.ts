@@ -17,18 +17,20 @@ function makeRec(input: TravelRequestInput, destination: string, index: number):
   const startDate = input.earliestDeparture;
   const endDate = addDays(startDate, input.tripLengthDays - 1);
   const budgetShare = input.budget * (0.72 + index * 0.07);
-  const accommodationEstimate = Math.round(budgetShare * 0.38);
-  const transitEstimate = Math.round(budgetShare * 0.24);
-  const experienceEstimate = Math.round(budgetShare * 0.28);
-  const bufferEstimate = Math.round((budgetShare - accommodationEstimate - transitEstimate - experienceEstimate) * 100) / 100;
-  const totalEstimatedCost = Math.round((accommodationEstimate + transitEstimate + experienceEstimate + bufferEstimate) * 100) / 100;
+  const flightEstimate = Math.round(budgetShare * 0.22);
+  const accommodationEstimate = Math.round(budgetShare * 0.3);
+  const foodEstimate = Math.round(budgetShare * 0.16);
+  const transitEstimate = Math.round(budgetShare * 0.1);
+  const experienceEstimate = Math.round(budgetShare * 0.14);
+  const bufferEstimate = Math.round((budgetShare - flightEstimate - accommodationEstimate - foodEstimate - transitEstimate - experienceEstimate) * 100) / 100;
+  const totalEstimatedCost = Math.round((flightEstimate + accommodationEstimate + foodEstimate + transitEstimate + experienceEstimate + bufferEstimate) * 100) / 100;
   return {
     title: `${destination} ${['food-and-culture', 'soft-adventure', 'slow-discovery'][index]} escape`,
     destination,
     summary: `A ${input.tripLengthDays}-day ${input.pace} trip from ${input.departure} shaped around ${input.interests.slice(0, 3).join(', ')}.`,
     whyItFits: [`Fits within ${input.currency} ${input.budget.toLocaleString()}`, `Matches ${input.accommodation}`, `Balances ${input.interests[0]} with practical pacing`],
     practicalNotes: ['Prices are directional estimates, not live fares.', 'Confirm availability before booking.', `Built for ${input.travelers} traveler${input.travelers > 1 ? 's' : ''}.`],
-    startDate, endDate, currency: input.currency.toUpperCase(), accommodationEstimate, transitEstimate, experienceEstimate, bufferEstimate, totalEstimatedCost,
+    startDate, endDate, currency: input.currency.toUpperCase(), flightEstimate, accommodationEstimate, foodEstimate, transitEstimate, experienceEstimate, bufferEstimate, totalEstimatedCost,
     itinerary: Array.from({ length: input.tripLengthDays }, (_, i) => ({ day: i + 1, date: addDays(startDate, i), title: i === 0 ? `Arrive and settle into ${destination}` : `Explore ${destination} layer ${i + 1}`, summary: `A focused day with ${input.interests[i % input.interests.length]} moments, local meals, and room to breathe.`, estimatedCost: Math.round((experienceEstimate / input.tripLengthDays) * 100) / 100, notes: ['Keep plans flexible.', 'Book refundable where possible.'] })),
   };
 }

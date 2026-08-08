@@ -21,8 +21,14 @@ test('mock AI full planning journey works on mobile', async ({ page }) => {
   await page.getByRole('button', { name: /show my three trips/i }).click();
   await expect(page).toHaveURL(/\/plan\/results\//);
   await expect(page.getByRole('article')).toHaveCount(3);
-  await page.getByRole('link', { name: /view trip/i }).first().click();
+  await page.getByRole('link', { name: /customize budget/i }).first().click();
   await expect(page.getByRole('heading', { name: /day-by-day/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /budget playground/i })).toBeVisible();
+  await page.getByRole('button', { name: /comfortable/i }).click();
+  await expect(page.getByText(/comfortable scenario/i)).toBeVisible();
+  await page.getByRole('button', { name: /reset to recommendation/i }).click();
+  await expect(page.getByText(/balanced recommendation/i)).toBeVisible();
+  await expect(page.getByRole('link', { name: /find flights/i })).toHaveAttribute('href', /Mexico%20City%20to/);
   await page.getByLabel(/email/i).fill('Frank@Example.com');
   await page.getByRole('button', { name: /watch this trip/i }).click();
   await expect(page.getByText(/we'll let you know/i)).toBeVisible();

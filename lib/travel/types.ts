@@ -6,7 +6,7 @@ export type TravelRequestInput = {
 export type GeneratedItineraryDay = { day: number; date: string; title: string; summary: string; estimatedCost: number; notes: string[] };
 export type GeneratedRecommendation = {
   title: string; destination: string; summary: string; whyItFits: string[]; practicalNotes: string[];
-  startDate: string; endDate: string; currency: string; accommodationEstimate: number; transitEstimate: number;
+  startDate: string; endDate: string; currency: string; flightEstimate: number; accommodationEstimate: number; foodEstimate: number; transitEstimate: number;
   experienceEstimate: number; bufferEstimate: number; totalEstimatedCost: number; itinerary: GeneratedItineraryDay[];
 };
 export type RecommendationGenerator = { generate(input: TravelRequestInput, correctionIssues?: string[]): Promise<GeneratedRecommendation[]> };

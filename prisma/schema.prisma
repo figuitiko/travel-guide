@@ -51,7 +51,9 @@ model TripRecommendation {
   startDate             DateTime        @db.Date
   endDate               DateTime        @db.Date
   currency              String          @db.VarChar(3)
+  flightEstimate        Decimal?        @db.Decimal(12, 2)
   accommodationEstimate Decimal         @db.Decimal(12, 2)
+  foodEstimate          Decimal?        @db.Decimal(12, 2)
   transitEstimate       Decimal         @db.Decimal(12, 2)
   experienceEstimate    Decimal         @db.Decimal(12, 2)
   bufferEstimate        Decimal         @db.Decimal(12, 2)

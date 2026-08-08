@@ -16,8 +16,10 @@ export function validateGeneratedRecommendations(request: TravelRequestInput, re
       if (day.estimatedCost < 0) issues.push(`${label} day costs must be nonnegative.`);
     });
     if (rec.startDate < request.earliestDeparture || rec.endDate > request.latestReturn || daysBetweenInclusive(rec.startDate, rec.endDate) !== request.tripLengthDays) issues.push(`${label} dates must match requested trip length and window.`);
-    const components = [rec.accommodationEstimate, rec.transitEstimate, rec.experienceEstimate, rec.bufferEstimate];
-    if (components.some((n) => n < 0)) issues.push(`${label} component costs must be nonnegative.`);
+    const components = [rec.flightEstimate, rec.accommodationEstimate, rec.foodEstimate, rec.transitEstimate, rec.experienceEstimate, rec.bufferEstimate];
+    if (typeof rec.flightEstimate !== 'number' || !Number.isFinite(rec.flightEstimate)) issues.push(`${label} flight estimate is required.`);
+    if (typeof rec.foodEstimate !== 'number' || !Number.isFinite(rec.foodEstimate)) issues.push(`${label} food estimate is required.`);
+    if (components.some((n) => typeof n !== 'number' || !Number.isFinite(n) || n < 0)) issues.push(`${label} component costs must be nonnegative.`);
     const total = round2(components.reduce((sum, value) => sum + value, 0));
     if (Math.abs(total - rec.totalEstimatedCost) > 0.01) issues.push(`${label} total must equal component sum.`);
     if (rec.totalEstimatedCost > request.budget) issues.push(`${label} total must not exceed budget.`);

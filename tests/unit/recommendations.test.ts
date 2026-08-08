@@ -38,3 +38,17 @@ describe('generated recommendation validation', () => {
     } else throw new Error('expected invalid recommendations');
   });
 });
+
+it('requires explicit flight and food estimates in generated recommendation totals', async () => {
+  const generated = await mockGenerator.generate(request);
+  const first = generated[0]!;
+  expect(first.flightEstimate).toBeGreaterThan(0);
+  expect(first.foodEstimate).toBeGreaterThan(0);
+  const total = first.flightEstimate + first.accommodationEstimate + first.foodEstimate + first.transitEstimate + first.experienceEstimate + first.bufferEstimate;
+  expect(first.totalEstimatedCost).toBeCloseTo(total, 2);
+
+  const missingFlight = generated.map((rec, index) => index === 0 ? { ...rec, flightEstimate: undefined as unknown as number } : rec);
+  const result = validateGeneratedRecommendations(request, missingFlight);
+  expect(result.ok).toBe(false);
+  if (!result.ok) expect(result.issues.join(' ')).toMatch(/flight/i);
+});
